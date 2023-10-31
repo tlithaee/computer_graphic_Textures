@@ -1,3 +1,9 @@
+<!-- 
+Nama  : Syarifah Talitha Erfany
+NRP   : 5025211175
+Kelas : Grafika Komputer A 
+-->
+
 <!DOCTYPE html>
 <meta charset="UTF-8" />
 <html>
@@ -55,7 +61,12 @@
       let rotateZ = 0;
 
       let textureObjects = []; // Six texture objects to hold the six tectures.
+      
+      // PERUBAHAN PERTAMA
+      // Mendefinisikan variabel "img" sebagai array kosong untuk menyimpan objek 
+      //gambar yang akan dimuat dan digunakan pada sisi-sisi kubus
       let img = []; // six image objects to bind on to the cube
+      
       const textureURLs = [
         "park/posz.jpg",
         "park/posx.jpg",
@@ -79,25 +90,52 @@
         mat4.rotateY(modelview, modelview, rotateY);
         mat4.rotateZ(modelview, modelview, rotateZ);
 
+        // PERUBAHAN KEDUA
+        // Mendeklarasikan variabel index dan menginisialisasinya dengan nilai 0
         let index = 0;
 
+        // Memanggil fungsi drawSquare dengan menggunakan tekstur dari textureObjects 
+        // dengan indeks saat ini (0), yang mewakili wajah depan kubus.
         drawSquare(textureObjects[index++]); // front face
 
+        // Memutar kembali matriks modelview sebesar 90 derajat searah jarum jam 
+        // pada sumbu Y untuk mengatur posisi untuk wajah kanan kubus.
         mat4.rotateY(modelview, modelview, Math.PI / 2);
+        // Memanggil drawSquare dengan menggunakan tekstur dari 
+        // textureObjects dengan indeks saat ini (1), yang mewakili wajah kanan kubus.
         drawSquare(textureObjects[index++]); // right face
 
+        // Memutar matriks modelview dengan sudut 90 derajat searah jarum 
+        // jam pada sumbu Y, untuk mengatur posisi untuk wajah belakang kubus.
         mat4.rotateY(modelview, modelview, Math.PI / 2);
+        // Memanggil drawSquare dengan tekstur dari textureObjects dengan indeks
+        // saat ini (2), yang mewakili wajah belakang kubus.
         drawSquare(textureObjects[index++]); // back face
 
+
+        // Memutar kembali matriks modelview sebesar 90 derajat searah jarum
+        // jam pada sumbu Y untuk mengatur posisi untuk wajah kiri kubus.
         mat4.rotateY(modelview, modelview, Math.PI / 2);
+        // Memanggil drawSquare dengan menggunakan tekstur dari
+        // textureObjects dengan indeks saat ini (3), yang mewakili wajah kiri kubus.
         drawSquare(textureObjects[index++]); // left face
 
+        // Melakukan rotasi tambahan sebesar 90 derajat searah jarum jam pada sumbu Y, 
+        // yang setara dengan rotasi total 360 derajat, untuk mengembalikan orientasi kubus ke posisi awal.
         mat4.rotateY(modelview, modelview, Math.PI / 2); // 360 full rotate
 
+        // Memutar matriks modelview dengan sudut -90 derajat searah jarum jam
+        // pada sumbu X untuk mengatur posisi untuk wajah atas kubus.
         mat4.rotateX(modelview, modelview, -Math.PI / 2);
+        // Memanggil drawSquare dengan menggunakan tekstur dari textureObjects
+        // dengan indeks saat ini (4), yang mewakili wajah atas kubus.
         drawSquare(textureObjects[index++]); // up face
 
+        // Memutar matriks modelview sebesar 180 derajat searah jarum jam
+        // pada sumbu X untuk mengatur posisi untuk wajah bawah kubus.
         mat4.rotateX(modelview, modelview, Math.PI);
+        // Memanggil drawSquare dengan menggunakan tekstur dari textureObjects 
+        // dengan indeks saat ini (5), yang mewakili wajah bawah kubus.
         drawSquare(textureObjects[index++]); // bottom face
       }
 
@@ -157,11 +195,21 @@
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
 
+
+        // PERUBAHAN KETIGA
+        // Memulai loop for yang akan dieksekusi 6 kali, dengan inisialisasi i
+        // mulai dari 0, dan akan berlanjut hingga i kurang dari 6.
         for (let i = 0; i < 6; i++) {
+          // Membuat objek gambar baru dan menyimpannya dalam 
+          // array img pada indeks yang sesuai.
           img[i] = new Image();
+          // Menetapkan fungsi penanganan yang akan dieksekusi saat gambar telah diunduh.
           img[i].onload = function () {
+            // Membuat objek tekstur dalam WebGL dan menyimpannya dalam array textureObjects pada indeks yang sesuai.
             textureObjects[i] = gl.createTexture();
+            // Mengikat objek tekstur yang baru dibuat ke target gl.TEXTURE_2D dalam konteks WebGL.
             gl.bindTexture(gl.TEXTURE_2D, textureObjects[i]);
+            // Mengisi objek tekstur dengan gambar yang telah diunduh (img[i]) dalam format RGBA dan tipe UNSIGNED_BYTE.
             gl.texImage2D(
               gl.TEXTURE_2D,
               0,
@@ -170,9 +218,12 @@
               gl.UNSIGNED_BYTE,
               img[i]
             );
+            // Menghasilkan tingkat mipmap untuk objek tekstur.
             gl.generateMipmap(gl.TEXTURE_2D);
+            // Jika i adalah 5 (artinya ini adalah gambar terakhir yang diunduh), maka panggil fungsi draw() untuk merender objek dengan tekstur baru.
             if (i === 5) draw();
           };
+          // Menetapkan sumber gambar dengan URL yang sesuai dari array textureURLs untuk mengunduh gambar.
           img[i].src = textureURLs[i];
         }
       }
